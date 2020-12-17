@@ -2,6 +2,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const User = require("./User");
+const fs = require("fs");
 
 const gStrategy = new GoogleStrategy(
   {
@@ -50,7 +51,8 @@ opts.jwtFromRequest = function (req) {
   }
   return token;
 };
-opts.secretOrKey = process.env.JWT_SECRET;
+let pubKey = fs.readFileSync("./keys/pub.key");
+opts.secretOrKey = pubKey;
 
 passport.use(
   new JwtStrategy(opts, (jwt_payload, done) => {

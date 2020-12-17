@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 router.get("/google", (req, res) => {
   passport.authenticate("google", {
@@ -16,12 +17,14 @@ router.get(
   (req, res) => {
     let origin = req.query.state;
     // generate a JWT token
+    let privateKey = fs.readFileSync("./keys/pri.key");
+
     let token = jwt.sign(
       {
         data: req.user,
       },
-      process.env.JWT_SECRET,
-      { expiresIn: 604800 }
+      privateKey,
+      { expiresIn: 604800, algorithm: "RS256" }
     );
     res.cookie("jwt", token, { domain: process.env.COOKIE_DOMAIN });
     res.redirect(origin);
