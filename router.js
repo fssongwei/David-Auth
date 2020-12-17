@@ -36,7 +36,15 @@ router.get("/logout", (req, res) => {
 router.get("/", (req, res) => {
   let origin = req.query.origin;
   if (!origin) res.send("Origin Unauthorized!");
-  res.render("index", { origin: origin });
+  else res.render("index", { origin: origin });
 });
+
+router.get(
+  "/user",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.status(200).send(req.user);
+  }
+);
 
 module.exports = router;

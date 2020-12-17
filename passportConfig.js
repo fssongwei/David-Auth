@@ -1,5 +1,6 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const JwtStrategy = require("passport-jwt").Strategy;
 const User = require("./User");
 
 const gStrategy = new GoogleStrategy(
@@ -38,3 +39,21 @@ if (process.env.NODE_ENV === "development") {
 }
 
 passport.use(gStrategy);
+
+// JWT Strategy
+
+var opts = {};
+opts.jwtFromRequest = function (req) {
+  var token = null;
+  if (req && req.cookies) {
+    token = req.cookies["jwt"];
+  }
+  return token;
+};
+opts.secretOrKey = process.env.JWT_SECRET;
+
+passport.use(
+  new JwtStrategy(opts, (jwt_payload, done) => {
+    done(null, jwt_payload.data);
+  })
+);
