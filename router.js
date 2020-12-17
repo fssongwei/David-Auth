@@ -29,7 +29,7 @@ router.get(
 );
 
 router.get("/logout", (req, res) => {
-  res.clearCookie("jwt");
+  res.clearCookie("jwt", { domain: process.env.COOKIE_DOMAIN });
   res.redirect("/");
 });
 
