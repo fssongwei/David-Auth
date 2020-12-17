@@ -23,7 +23,7 @@ router.get(
       process.env.JWT_SECRET,
       { expiresIn: 604800 }
     );
-    res.cookie("jwt", token);
+    res.cookie("jwt", token, { domain: process.env.COOKIE_DOMAIN });
     res.redirect(origin);
   }
 );
